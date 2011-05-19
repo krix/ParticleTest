@@ -102,6 +102,22 @@ package
 		override public function start(Explode:Boolean = true, Lifespan:Number = 0, Frequency:Number = 0.1, Quantity:uint = 0):void
 		{
 			super.start(Explode, this.lifespan, Frequency, Quantity);
+
+			//Immediately execute the explosion code part from the update function, to prevent other explosions to override this one.
+			//This fixes the problem, that you can not add two particle explosions in the same frame.
+			if(Explode){
+				on = false;
+				var i:uint = 0;
+				var l:uint = _quantity;
+				if((l <= 0) || (l > members.length))
+					l = members.length;
+				while(i < l)
+				{
+					emitParticle();
+					i++;
+				}
+				_quantity = 0;
+			}
 		}
 		
 		/**
